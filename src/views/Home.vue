@@ -22,7 +22,7 @@
               </div>
               <p v-bind:class="[nowState.textSecondaryColor]" class="font-weight-bold w-100" style="font-size: 160px; line-height: 1;">{{ countDown.show }}</p>
             </div>
-              
+
             <div class="w-100 mb-1">
                 <ul class="nav nav-tabs row no-gutters border-0" id="myTab" role="tablist">
                   <li class="col-4 nav-item">
@@ -35,7 +35,7 @@
                     <a class="nav-link border-0 text-dark text-center" id="all" data-toggle="tab" href="#all" role="tab" v-on:click="todoShowStatus = 'all'">全部事項</a>
                   </li>
                 </ul>
-                <div class="tab-content" id="todo" style="min-height: 200px; max-height: 200px; overflow-y: scroll;">
+                <div class="tab-content" id="todo" style="min-height: 200px; max-height: 200px; overflow-y: auto;">
                     <ul class="list-group">
                         <li  v-for="(item, index) in todoListStatus" :key="item.todo" v-bind:class="[nowState.bgColor]" class="list-group-item border-0 rounded-0 py-1 mt-1" style="border-bottom: 1px solid #dee2e6 !important;">
                             <div class="d-flex align-items-center">
@@ -80,35 +80,33 @@ export default {
         time: 1500,
         status: false,
         show: '25:00',
-        icon: 'play_circle_filled'
+        icon: 'play_circle_filled',
       },
       countController: '',
       todoShowStatus: 'todo',
       todo: '',
-      todoList:  [],
-      todoLen: 0
+      todoList: [],
     };
   },
   methods: {
-    addTodo () {
+    addTodo() {
       const vm = this;
       if (vm.todo !== '') {
         const todoObj = {
           todo: vm.todo,
-          done: false
-        } 
-        vm.todoList.push(todoObj)
-        vm.todoLen++
-        vm.todo = ''; 
+          done: false,
+        };
+        vm.todoList.push(todoObj);
+        vm.todo = '';
         localStorage.setItem('pomodoroTodo', JSON.stringify(vm.todoList));
       }
     },
-    deleteTodo (index) {
+    deleteTodo(index) {
       const vm = this;
       vm.todoList.splice(index, 1);
       localStorage.setItem('pomodoroTodo', JSON.stringify(vm.todoList));
     },
-    addToCountDown (todoDetail) {
+    addToCountDown(todoDetail) {
       const vm = this;
       vm.countDown.todo = todoDetail.todo;
       vm.countDown.todoDone = todoDetail.done;
@@ -125,7 +123,7 @@ export default {
       const min = Math.floor(vm.countDown.time / 60);
       const sec = vm.countDown.time % 60;
       vm.countDown.show = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-      
+
       vm.nowState = {
         state: 'work',
         bgColor: 'bg-primary',
@@ -162,11 +160,11 @@ export default {
           const min = Math.floor(vm.countDown.time / 60);
           const sec = vm.countDown.time % 60;
           vm.countDown.show = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-          console.log(vm.nowState.state)
-          if (vm.countDown.time == 0) {
+          console.log(vm.nowState.state);
+          if (vm.countDown.time === 0) {
             if (vm.nowState.state === 'work') {
               vm.countDown.time = 0;
-              vm.todoList.forEach(todo => {
+              vm.todoList.forEach((todo) => {
                 if (todo.todo === vm.countDown.todo) {
                   todo.done = true;
                   vm.breakTime();
@@ -188,20 +186,19 @@ export default {
     },
   },
   computed: {
-    todoListStatus: function() {
+    todoListStatus() {
       const vm = this;
-      if (vm.todoShowStatus == 'all') {
-        return vm.todoList
-      } else if (vm.todoShowStatus == 'todo'){
-        return vm.todoList.filter(item => item.done == false)
-      } else if (vm.todoShowStatus == 'complete') {
-        return vm.todoList.filter(item => item.done == true)
+      if (vm.todoShowStatus === 'todo') {
+        return vm.todoList.filter(item => !item.done);
+      } if (vm.todoShowStatus === 'complete') {
+        return vm.todoList.filter(item => item.done);
       }
-    }
+      return vm.todoList;
+    },
   },
   created() {
     const vm = this;
     vm.todoList = JSON.parse(localStorage.getItem('pomodoroTodo')) || [];
-  }
+  },
 };
 </script>

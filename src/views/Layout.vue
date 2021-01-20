@@ -19,14 +19,13 @@
   </div>
 </template>
 <script>
-  import SelectBar from '../components/SelectBar';
-  import Nav from '../components/Nav';
-  
-  export default {
-    components: {
-      SelectBar,
-      Nav,
-    },
-  };
+import SelectBar from '@/components/SelectBar.vue';
+// import Nav from '@/components/Nav.vue';
+
+export default {
+  components: {
+    SelectBar,
+    // Nav,
+  },
+};
 </script>
-    
